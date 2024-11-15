@@ -12,13 +12,7 @@ run(
       },
     } = context;
     try {
-      // let userPrompt = params?.prompt ?? text;
-      // const { reply } = await textGeneration(
-      //   sender.address,
-      //   userPrompt,
-      //   await agent_prompt(sender.address),
-      // );
-      // await processMultilineResponse(sender.address, reply, context);
+      await context.send(`GM! Enter "/help" to start`);
     } catch (error) {
       console.error('Error during OpenAI call:', error);
       await context.send('An error occurred while processing your request.');
