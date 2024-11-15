@@ -90,3 +90,18 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+
+  deploy:
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Deploy to Docker
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: 'https://watchtower.majus.org/v1/update'
+        method: 'GET'
+        bearerToken: ${{ secrets.WATCHTOWER_API_TOKEN }}
+        timeout: 60000
+        preventFailureOnNoResponse: true
