@@ -4,7 +4,7 @@ import {
   EvmChains,
 } from '@ethsign/sp-sdk';
 import { privateKeyToAccount } from "viem/accounts";
-import { fetchData } from './data.js';
+import { fetchData } from './chain.js';
 
 export const Sign = new SignProtocolClient(SpMode.OnChain, {
   chain: EvmChains.baseSepolia,

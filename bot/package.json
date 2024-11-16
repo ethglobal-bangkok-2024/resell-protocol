@@ -9,6 +9,7 @@
     "docker:debug": "docker run -p 9229:9229 -v ./src:/root/app/src -it --env-file .env resell-bot:dev npm run dev"
   },
   "dependencies": {
+    "@curvegrid/multibaas-sdk": "^1.0.0-beta26",
     "@ethsign/sp-sdk": "^0.7.8",
     "@xmtp/message-kit": "latest",
     "pinata": "^1.7.2",
