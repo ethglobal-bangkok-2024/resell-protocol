@@ -1,5 +1,6 @@
 import { formatEther } from 'viem';
 import { pbt } from '../chain.js';
+import { createTransfer } from '../sign.js';
 
 /**
  *
@@ -15,7 +16,9 @@ export async function handler(context) {
   //TODO: Check if sender is current owner of the chip
   if (params.chip) {
     const url = new URL(process.env.FRAME_BASE_URL);
-    const offers = await (await pbt(sender.address)).read.getActiveOffersByTokenId([parseInt(params.chip)]);
+    const offers = await (
+      await pbt(sender.address)
+    ).read.getActiveOffersByTokenId([parseInt(params.chip)]);
     if (offers && offers.length > 0) {
       const offer = offers[offers.length - 1];
       url.searchParams.set('action', 'popOffer');
@@ -26,12 +29,15 @@ export async function handler(context) {
       await context.send(url.toString());
       //HACK: Fake the smart contract call
       await (await pbt(sender.address)).write.acceptOffer([offer.id]);
+      // Attest
+      const attest = await createTransfer(params.chip, sender.address, {
+        toAddress: offer.buyer,
+        price: offer.amount,
+      });
       await context.send('Psst: done 🥷');
     } else {
     }
   } else {
-    await context.reply(
-      'Missing required parameter: Chip ID.'
-    );
+    await context.reply('Missing required parameter: Chip ID.');
   }
 }
