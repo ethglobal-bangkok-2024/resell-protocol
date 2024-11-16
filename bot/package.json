@@ -3,8 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "dev": "nodemon --inspect=0.0.0.0 src/index.js",
+    "start": "node src/index.js",
+    "docker:build": "docker build -t resell-bot:dev .",
+    "docker:debug": "docker run -p 9229:9229 -v ./src:/root/app/src -it --env-file .env resell-bot:dev npm run dev"
   },
   "dependencies": {
     "@xmtp/message-kit": "latest"
