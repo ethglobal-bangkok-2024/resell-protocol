@@ -13,7 +13,7 @@ contract ProductToken is ERC721, IERC5791, Ownable {
     using ECDSA for bytes;
 
     uint256 private _nextTokenId = 1;
-    uint256 private _nextOfferId = 1;
+    uint256 private _nextOfferId = 0;
 
     mapping(address => uint256) _chipAddressToTokenId;
     mapping(uint256 => address) _tokenIdToChipAddress;
@@ -36,8 +36,8 @@ contract ProductToken is ERC721, IERC5791, Ownable {
     event OfferAccepted(uint256 indexed offerId);
     event OfferRejected(uint256 indexed offerId);
 
-    Offer[] offers;
-    mapping(uint256 => Offer) _tokenIdToOffers;
+    Offer[] public offers;
+    mapping(uint256 => Offer[]) _tokenIdToOffers;
 
     constructor(
         string memory name,
@@ -133,7 +133,7 @@ contract ProductToken is ERC721, IERC5791, Ownable {
     ) external override returns (uint256 tokenId) {}
 
     /// currently using eth
-    function createOffer(uint256 tokenId, uint256 amount) public payable {
+    function createOffer(uint256 tokenId) public payable {
         uint256 offerId = _nextOfferId;
 
         /// get the money first
@@ -142,18 +142,17 @@ contract ProductToken is ERC721, IERC5791, Ownable {
         Offer memory newOffer = Offer({
             id: _nextOfferId,
             tokenId: tokenId,
-            amount: amount,
+            amount: msg.value,
             offerer: msg.sender,
             isActive: true
         });
 
-        offers[offerId] = newOffer;
+        offers.push(newOffer);
 
-        emit OfferCreated(offerId, tokenId, amount, msg.sender);
+        emit OfferCreated(offerId, tokenId, msg.value, msg.sender);
         _nextOfferId += 1;
     }
 
-    /// TODO: implement real logic
     function cancelOffer(uint256 offerId) public {
         Offer memory selectedOffer = offers[offerId];
 
@@ -174,15 +173,14 @@ contract ProductToken is ERC721, IERC5791, Ownable {
         emit OfferCancelled(offerId);
     }
 
-    /// TODO: implement real logic
     function rejectOffer(uint256 offerId) public {
         Offer storage selectedOffer = offers[offerId];
-        uint256 tokenId = selectedOffer.tokenId;
-        address tokenOwner = ownerOf(tokenId);
-        require(
-            tokenOwner == msg.sender,
-            "Only owner can access this function"
-        );
+        // uint256 tokenId = selectedOffer.tokenId;
+        // address tokenOwner = ownerOf(tokenId);
+        // require(
+        //     tokenOwner == msg.sender || msg.sender == address(this),
+        //     "Only owner can access this function"
+        // );
 
         /// refund
         payable(address(selectedOffer.offerer)).transfer(selectedOffer.amount);
@@ -193,7 +191,6 @@ contract ProductToken is ERC721, IERC5791, Ownable {
         emit OfferRejected(offerId);
     }
 
-    /// TODO: implement real logic
     function acceptOffer(uint256 offerId) public {
         Offer storage selectedOffer = offers[offerId];
         uint256 tokenId = selectedOffer.tokenId;
@@ -203,32 +200,54 @@ contract ProductToken is ERC721, IERC5791, Ownable {
             tokenOwner == msg.sender,
             "Only owner can access this function"
         );
-
         require(selectedOffer.isActive, "Offer must be active");
 
-        /// transfer the money to the nft owner
-        payable(address(tokenOwner)).transfer(selectedOffer.amount);
+        // Transfer the money to the NFT owner
+        (bool success, ) = tokenOwner.call{value: selectedOffer.amount}("");
+        require(success, "Transfer to tokenOwner failed");
 
-        /// transfer the NFT
-        transferFrom(msg.sender, selectedOffer.offerer, selectedOffer.tokenId);
+        // Transfer the NFT
+        safeTransferFrom(msg.sender, selectedOffer.offerer, tokenId);
 
-        /// TODO: refund and cancel everybody else
-        for (uint256 i = 1; i < _nextOfferId; i++) {
-            Offer memory currentLoopOffer = offers[i];
+        // Refund and cancel other offers for the same tokenId
+        for (uint256 i = 0; i < _nextOfferId; i++) {
+            Offer storage currentLoopOffer = offers[i];
             if (
-                currentLoopOffer.isActive && currentLoopOffer.tokenId == tokenId
+                currentLoopOffer.isActive &&
+                currentLoopOffer.tokenId == tokenId &&
+                currentLoopOffer.id != offerId
             ) {
-                rejectOffer(currentLoopOffer.id);
+                // Refund the offerer
+                (bool refundSuccess, ) = currentLoopOffer.offerer.call{
+                    value: currentLoopOffer.amount
+                }("");
+                require(refundSuccess, "Refund to offerer failed");
+
+                // Disable the offer
+                currentLoopOffer.isActive = false;
             }
         }
 
+        // Mark the accepted offer as inactive
         offers[offerId].isActive = false;
 
         emit OfferAccepted(offerId);
     }
 
-    function getOffers() public view returns (Offer[] memory offersResult) {
-        return offers;
+    function getActiveOffersByTokenId(
+        uint256 tokenId
+    ) public view returns (Offer[] memory offersResult) {
+        uint256 indexOfResult = 0;
+
+        for (uint256 i = 1; i < _nextOfferId; i++) {
+            Offer memory currentLoopOffer = offers[i];
+            if (
+                currentLoopOffer.isActive && currentLoopOffer.tokenId == tokenId
+            ) {
+                offersResult[indexOfResult] = currentLoopOffer;
+                indexOfResult += 1;
+            }
+        }
     }
 
     function isChipSignatureForToken(
