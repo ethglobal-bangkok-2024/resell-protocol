@@ -10,7 +10,9 @@ async function sendMessage(address, message) {
   const { v2client } = await xmtpClient();
   if (v2client.conversations) {
     const conversations = await v2client.conversations.list();
-    const [conversation] = conversations.filter(({peerAddress}) => peerAddress === address); 
+    const [conversation] = conversations.filter(
+      ({ peerAddress }) => peerAddress === address
+    );
     if (conversation) {
       await conversation.send(message);
     }

@@ -157,6 +157,18 @@
         "internalType": "uint256",
         "name": "offerId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "OfferAccepted",
@@ -170,6 +182,18 @@
         "internalType": "uint256",
         "name": "offerId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "OfferCancelled",
@@ -199,7 +223,13 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "offerer",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
         "type": "address"
       }
     ],
@@ -214,6 +244,18 @@
         "internalType": "uint256",
         "name": "offerId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "OfferRejected",
@@ -320,7 +362,7 @@
           { "internalType": "uint256", "name": "id", "type": "uint256" },
           { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
           { "internalType": "uint256", "name": "amount", "type": "uint256" },
-          { "internalType": "address", "name": "offerer", "type": "address" },
+          { "internalType": "address", "name": "buyer", "type": "address" },
           { "internalType": "bool", "name": "isActive", "type": "bool" }
         ],
         "internalType": "struct ProductToken.Offer[]",
@@ -375,7 +417,7 @@
       { "internalType": "uint256", "name": "id", "type": "uint256" },
       { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
       { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "internalType": "address", "name": "offerer", "type": "address" },
+      { "internalType": "address", "name": "buyer", "type": "address" },
       { "internalType": "bool", "name": "isActive", "type": "bool" }
     ],
     "stateMutability": "view",
