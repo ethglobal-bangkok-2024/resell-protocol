@@ -4,6 +4,7 @@ import { handler as payment } from './handler/payment.js';
 import { handler as help } from './handler/help.js';
 import { handler as timeline } from './handler/timeline.js';
 import { handler as createOffer } from './handler/create-offer.js';
+import { handler as cancelOffer } from './handler/cancel-offer.js';
 
 export const skills = [
   {
@@ -113,6 +114,18 @@ export const skills = [
             default: 'eth',
             type: 'string',
             values: ['eth'],
+          },
+        },
+      },
+      {
+        skill: '/cancel',
+        examples: ['/cancel 04EA'],
+        handler: cancelOffer,
+        description: 'Cancel a pending offer.',
+        params: {
+          chip: {
+            default: '',
+            type: 'string',
           },
         },
       },
