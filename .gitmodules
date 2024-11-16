@@ -7,3 +7,6 @@
 [submodule "pbt/lib/solady"]
 	path = pbt/lib/solady
 	url = https://github.com/vectorized/solady
+[submodule "pbt/lib/forge-multibaas"]
+	path = pbt/lib/forge-multibaas
+	url = https://github.com/curvegrid/forge-multibaas
