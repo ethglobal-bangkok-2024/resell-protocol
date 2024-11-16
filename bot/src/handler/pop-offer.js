@@ -36,7 +36,9 @@ export async function handler(context) {
       });
       await context.send('Psst: accepted 🥷');
       // 2FA
+      const haloMsg = `Please, confirm a posession of the Halo chip: ${Date.now()}`;
       const chipSignUrl = new URL(process.env.CHIP_SIGN_URL);
+      chipSignUrl.searchParams.set('msg', haloMsg);
       await context.send(`Now, please sign the transfer using the HaLo chip: ${chipSignUrl.toString()}`);
     } else {
     }
