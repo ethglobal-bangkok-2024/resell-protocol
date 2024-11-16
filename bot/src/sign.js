@@ -19,7 +19,8 @@ export async function createStatusUpdate(chipId, senderAddress, { textRecord = u
       id: chipId,
       ownerAddress: senderAddress,
       pbtAddressWithChainId: `${chainId}:${address}`,
-      textRecord,
+      // Strip quotes
+      textRecord: textRecord?.trim().replace(/^"/, '').replace(/"$/, ''),
       cid,
       timestamp: Date.now(),
     },
