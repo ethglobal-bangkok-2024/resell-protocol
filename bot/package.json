@@ -9,7 +9,9 @@
     "docker:debug": "docker run -p 9229:9229 -v ./src:/root/app/src -it --env-file .env resell-bot:dev npm run dev"
   },
   "dependencies": {
-    "@xmtp/message-kit": "latest"
+    "@xmtp/message-kit": "latest",
+    "pinata": "^1.7.2",
+    "pinata-web3": "^0.5.2"
   },
   "engines": {
     "node": ">=20"

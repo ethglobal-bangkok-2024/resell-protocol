@@ -6,6 +6,7 @@ import { handler as timeline } from './handler/timeline.js';
 import { handler as createOffer } from './handler/create-offer.js';
 import { handler as cancelOffer } from './handler/cancel-offer.js';
 import { handler as popOffer } from './handler/pop-offer.js';
+import { handler as updateStatus } from './handler/update-status.js';
 
 export const skills = [
   {
@@ -137,6 +138,22 @@ export const skills = [
         description: 'Accept or deny a pending offer (owner only).',
         params: {
           chip: {
+            default: '',
+            type: 'string',
+          },
+        },
+      },
+      {
+        skill: '/update',
+        examples: ['/update 04EA status'],
+        handler: updateStatus,
+        description: 'Update a product status (owner only).',
+        params: {
+          chip: {
+            default: '',
+            type: 'string',
+          },
+          status: {
             default: '',
             type: 'string',
           },
