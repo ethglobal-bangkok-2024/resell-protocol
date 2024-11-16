@@ -16,7 +16,7 @@ export async function handler(context) {
     url.searchParams.set('action', 'cancelOffer');
     url.searchParams.set('chip', params.chip);
     url.searchParams.set('ts', Date.now().toString());
-    await context.send(url.toString());
+    await context.reply(url.toString());
     //HACK: Fake the smart contract call
     await (await pbt(sender.address)).write.cancelOffer([parseInt(params.chip)]);
     await context.send('Psst: done 🥷');

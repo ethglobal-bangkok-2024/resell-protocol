@@ -34,7 +34,10 @@ export async function handler(context) {
         toAddress: offer.buyer,
         price: offer.amount,
       });
-      await context.send('Psst: done 🥷');
+      await context.send('Psst: accepted 🥷');
+      // 2FA
+      const chipSignUrl = new URL(process.env.CHIP_SIGN_URL);
+      await context.send(`Now, please sign the transfer using the HaLo chip: ${chipSignUrl.toString()}`);
     } else {
     }
   } else {
