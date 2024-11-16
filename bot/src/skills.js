@@ -99,7 +99,7 @@ export const skills = [
         },
       },
       {
-        skill: '/create',
+        skill: '/offer',
         examples: ['/create 04EA 10'],
         handler: createOffer,
         description: 'Create an offer for the product.',
@@ -132,7 +132,7 @@ export const skills = [
         },
       },
       {
-        skill: '/pop',
+        skill: '/answer',
         examples: ['/pop 04EA'],
         handler: popOffer,
         description: 'Accept or deny a pending offer (owner only).',
