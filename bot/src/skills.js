@@ -1,7 +1,8 @@
-// import { handler as tipping } from "./handler/tipping.js";
-// import { handler as payment } from "./handler/payment.js";
+import { handler as tipping } from "./handler/tipping.js";
+import { handler as payment } from "./handler/payment.js";
 // import { handler as games } from "./handler/game.js";
-import { handler as help } from "./handler/helpers.js";
+import { handler as help } from "./handler/help.js";
+import { handler as timeline } from "./handler/timeline.js";
 
 export const skills = [
   {
@@ -81,6 +82,18 @@ export const skills = [
       //   description: "Get the group ID.",
       //   params: {},
       // },
+      {
+        skill: '/timeline',
+        examples: ["/timeline 04EA849D"],
+        handler: timeline,
+        description: "View the product timeline.",
+        params: {
+          chip: {
+            default: "",
+            type: "string",
+          },
+        },
+      },
     ],
   },
 ];

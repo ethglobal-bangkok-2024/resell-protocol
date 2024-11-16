@@ -1,11 +1,6 @@
-import {
-  HandlerContext,
-  AbstractedMember,
-  SkillResponse,
-} from "@xmtp/message-kit";
 import { getUserInfo } from "@xmtp/message-kit";
 
-export async function handler(context: HandlerContext) {
+export async function handler(context) {
   const {
     message: {
       content: {
@@ -15,11 +10,11 @@ export async function handler(context: HandlerContext) {
       sender,
     },
   } = context;
-  let receivers: AbstractedMember[] = [];
+  let receivers = [];
 
   if (skill === "tip") {
     receivers = await Promise.all(
-      username.map((username: string) => getUserInfo(username)),
+      username.map((username) => getUserInfo(username)),
     );
   }
   if (!sender || receivers.length === 0 || amount === 0) {
