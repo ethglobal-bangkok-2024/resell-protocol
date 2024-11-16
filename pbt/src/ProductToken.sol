@@ -54,11 +54,11 @@ contract ProductToken is ERC721, IERC5791, Ownable {
     function safeMintWithChip(
         address to,
         address chipAddress,
-        string calldata data,
+        bytes32 data,
         bytes calldata signature
     ) public onlyOwner {
-        // address recoveredSigner = verifySigAndGetAddress(data, signature);
-        // require(recoveredSigner == chipAddress, "Signature is not valid");
+        address recoveredSigner = recoverSigner(data, signature);
+        require(recoveredSigner == chipAddress, "Signature is not valid");
 
         /// only bind after minting is successful
         uint256 tokenId = _nextTokenId++;
@@ -70,38 +70,56 @@ contract ProductToken is ERC721, IERC5791, Ownable {
         emit ChipSet(tokenId, chipAddress);
     }
 
-    function verifySigAndGetAddress(
-        string calldata data,
-        bytes calldata signature
-    ) public view returns (address signer) {
-        // Get message hash
-        bytes32 messageHash = keccak256(abi.encodePacked(data));
+    /// signature methods.
+    function splitSignature(
+        bytes memory sig
+    ) internal pure returns (uint8 v, bytes32 r, bytes32 s) {
+        require(sig.length == 65);
 
-        // Get Ethereum signed message hash
-        bytes32 ethSignedMessageHash = messageHash.toEthSignedMessageHash();
+        assembly {
+            // first 32 bytes, after the length prefix.
+            r := mload(add(sig, 32))
+            // second 32 bytes.
+            s := mload(add(sig, 64))
+            // final byte (first byte of the next 32 bytes).
+            v := byte(0, mload(add(sig, 96)))
+        }
 
-        console.log("eth signed message");
-        console.logBytes32(ethSignedMessageHash);
-
-        // Recover signer
-        return ethSignedMessageHash.recover(signature);
+        return (v, r, s);
     }
 
-    // function isChipSignatureForToken(
-    //     uint256 tokenId,
-    //     string calldata data,
-    //     bytes calldata signature
-    // ) public view returns (bool) {
-    //     // all token that are inclusive within the range below should have chips attached to them.
-    //     require(
-    //         tokenId < 1 || tokenId >= _nextTokenId,
-    //         "Token ID not paired to a chip"
-    //     );
+    function recoverSigner(
+        bytes32 data,
+        bytes memory sig
+    ) public pure returns (address) {
+        bytes32 message = prefixed(keccak256(abi.encode(data)));
+        (uint8 v, bytes32 r, bytes32 s) = splitSignature(sig);
+        return ecrecover(message, v, r, s);
+    }
 
-    //     address recoveredSigner = verifySigAndGetAddress(data, signature);
+    /// builds a prefixed hash to mimic the behavior of eth_sign.
+    function prefixed(bytes32 hash) internal pure returns (bytes32) {
+        return
+            keccak256(
+                abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
+            );
+    }
 
-    //     return _chipAddressToTokenId[recoveredSigner] == tokenId;
-    // }
+    function isChipSignatureForToken(
+        uint256 tokenId,
+        bytes32 data,
+        bytes calldata signature
+    ) public view returns (bool) {
+        // all token that are inclusive within the range below should have chips attached to them.
+        require(
+            tokenId < 1 || tokenId >= _nextTokenId,
+            "Token ID not paired to a chip"
+        );
+
+        address recoveredSigner = recoverSigner(data, signature);
+
+        return _chipAddressToTokenId[recoveredSigner] == tokenId;
+    }
 
     function transferToken(
         address to,
@@ -110,10 +128,10 @@ contract ProductToken is ERC721, IERC5791, Ownable {
         uint256 signatureTimestamp,
         bool useSafeTransferFrom,
         /// extras will just indicate payload
-        string calldata extras
+        bytes32 extras
     ) external returns (uint256 tokenId) {
-        // address recoveredSigner = verifySigAndGetAddress(extras, chipSignature);
-        // require(recoveredSigner == chipId, "Signature is not valid");
+        address recoveredSigner = recoverSigner(extras, chipSignature);
+        require(recoveredSigner == chipId, "Signature is not valid");
 
         if (useSafeTransferFrom == true) {
             safeTransferFrom(msg.sender, to, _chipAddressToTokenId[chipId]);
@@ -282,10 +300,4 @@ contract ProductToken is ERC721, IERC5791, Ownable {
 
         return offersResult;
     }
-
-    function isChipSignatureForToken(
-        uint256 tokenId,
-        bytes32 data,
-        bytes calldata signature
-    ) external view override returns (bool) {}
 }

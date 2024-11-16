@@ -16,7 +16,7 @@ contract ProductTokenScript is Script {
 
         productToken = new ProductToken("Louis Vuitton PBT", "LVPBT");
 
-        MultiBaas.linkContract("ProductToken", address(productToken));
+        // MultiBaas.linkContract("ProductToken", address(productToken));
 
         vm.stopBroadcast();
     }
