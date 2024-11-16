@@ -1,14 +1,15 @@
-import { handler as tipping } from "./handler/tipping.js";
-import { handler as payment } from "./handler/payment.js";
+import { handler as tipping } from './handler/tipping.js';
+import { handler as payment } from './handler/payment.js';
 // import { handler as games } from "./handler/game.js";
-import { handler as help } from "./handler/help.js";
-import { handler as timeline } from "./handler/timeline.js";
+import { handler as help } from './handler/help.js';
+import { handler as timeline } from './handler/timeline.js';
+import { handler as createOffer } from './handler/create-offer.js';
 
 export const skills = [
   {
-    name: "Group bot",
-    tag: "@bot",
-    description: "Group agent for tipping and transactions.",
+    name: 'Group bot',
+    tag: '@bot',
+    description: 'Group agent for tipping and transactions.',
     skills: [
       // {
       //   skill: "/tip [usernames] [amount] [token]",
@@ -68,10 +69,10 @@ export const skills = [
       //   },
       // },
       {
-        skill: "/help",
-        examples: ["/help"],
+        skill: '/help',
+        examples: ['/help'],
         handler: help,
-        description: "Get help with the bot.",
+        description: 'Get help with the bot.',
         params: {},
       },
       // {
@@ -84,13 +85,34 @@ export const skills = [
       // },
       {
         skill: '/timeline',
-        examples: ["/timeline 04EA849D"],
+        examples: ['/timeline 04EA'],
         handler: timeline,
-        description: "View the product timeline.",
+        description: 'View the product timeline.',
         params: {
           chip: {
-            default: "",
-            type: "string",
+            default: '',
+            type: 'string',
+          },
+        },
+      },
+      {
+        skill: '/create',
+        examples: ['/create 04EA 10'],
+        handler: createOffer,
+        description: 'Create an offer for the product.',
+        params: {
+          chip: {
+            default: '',
+            type: 'string',
+          },
+          amount: {
+            default: '',
+            type: 'number',
+          },
+          token: {
+            default: 'eth',
+            type: 'string',
+            values: ['eth'],
           },
         },
       },
