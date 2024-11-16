@@ -3,6 +3,7 @@ import { run } from '@xmtp/message-kit';
 // import { agent_prompt } from "./prompt.js";
 import { skills } from './skills.js';
 import { stashAttachment } from './stash.js';
+import { server } from './server.js';
 
 run(
   async (context) => {
@@ -31,3 +32,5 @@ run(
   },
   { skills }
 );
+
+server.listen(3000);
