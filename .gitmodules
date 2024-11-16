@@ -4,3 +4,6 @@
 [submodule "pbt/lib/openzeppelin-contracts"]
 	path = pbt/lib/openzeppelin-contracts
 	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "pbt/lib/solady"]
+	path = pbt/lib/solady
+	url = https://github.com/vectorized/solady
