@@ -1,6 +1,6 @@
 import { getContract, createWalletClient, extractChain, http } from 'viem';
 import { privateKeyToAccount } from "viem/accounts";
-import { baseSepolia } from 'viem/chains';
+import { baseSepolia, morphHolesky, mantleSepoliaTestnet, flowTestnet, lineaSepolia, spicy, polygonMumbai, polygonAmoy, polygonZkEvmTestnet, zircuitTestnet, rootstockTestnet, bitkubTestnet } from 'viem/chains';
 import pbtAbi from './pbt.abi.json' with { type: 'json' };
 
 export async function fetchData() {
@@ -24,7 +24,7 @@ export async function pbt(senderAddress) {
   const pk = privateKeyBySender(senderAddress);
   const signer = privateKeyToAccount(`0x${pk}`);
   const chain = extractChain({
-    chains: [baseSepolia],
+    chains: [baseSepolia, morphHolesky, mantleSepoliaTestnet, flowTestnet, lineaSepolia, spicy, polygonMumbai, polygonAmoy, polygonZkEvmTestnet, zircuitTestnet, rootstockTestnet, bitkubTestnet],
     id: Number(chainId),
   });
   const client = createWalletClient({
