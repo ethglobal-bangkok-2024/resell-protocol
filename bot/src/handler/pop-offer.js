@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { formatEther } from 'viem';
 import { pbt } from '../chain.js';
 import { createTransfer } from '../sign.js';
@@ -36,7 +37,8 @@ export async function handler(context) {
       });
       await context.send('Psst: accepted 🥷');
       // 2FA
-      const haloMsg = `Please, confirm a posession of the Halo chip: ${Date.now()}`;
+      const haloPayload = `Please, confirm a posession of the Halo chip: ${Date.now()}`;
+      const haloMsg = crypto.createHash('md5').update(haloPayload).digest('hex');
       const chipSignUrl = new URL(process.env.CHIP_SIGN_URL);
       chipSignUrl.searchParams.set('msg', haloMsg);
       await context.send(`Now, please sign the transfer using the HaLo chip: ${chipSignUrl.toString()}`);
