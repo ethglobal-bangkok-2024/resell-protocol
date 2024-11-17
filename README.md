@@ -7,7 +7,7 @@ We realize that a lot of people can try to get an advantage over others in an un
 Resell protocol allows you to have clear and transparent information about the item you are about to purchase. All the hands these goods went to, you will have records of them, whether in the form of pictures or text. The protocol also facilitates seamless trading experience using conversational UI. So that you can easily bargain and haggle without having to do too much context switching. Fund management and bidding are also done through our smart contracts, to ensure that no scams are happening.
 
 ## Live demo
-Check [here](https://resell-eight.vercel.app/?chainId=84532&chipId=3&address=0xe8926727Bd7e99042D7c415eA64962A9AD3E82B3).
+Check [here](https://resell-eight.vercel.app/?chainId=84532&chipId=5&address=0xe8926727Bd7e99042D7c415eA64962A9AD3E82B3).
 
 ## Implementation details
 - The core of this project are the Arx HaLo ships, which are powerful mark of representation of physical goods on chain. 
@@ -16,5 +16,11 @@ Check [here](https://resell-eight.vercel.app/?chainId=84532&chipId=3&address=0xe
 - State updates are recorded as Sign Protocol attestations for ease of reading and decoding.
 - Our UI layer consists of Converse by XMTP and mini web apps that interact with other to create a seamless trading experience. 
 - We utilize Curgvegrid MultiBaas' Webhooks for tracking PBT events on chain and notify buyer about new offers, and track purchases in form of attestations.
-Smart contracts:
+
+## Smart contracts
+
 - Base Sepolia: `0xe8926727Bd7e99042D7c415eA64962A9AD3E82B3`
+- Mantle Sepolia: `0xD4C0E0Fe064ea31FB639db0BE4ecca6B8fDBdCa9`
+- Polygon Amoy: `0xD4C0E0Fe064ea31FB639db0BE4ecca6B8fDBdCa9`
+- Morph Holesky: `0xD4C0E0Fe064ea31FB639db0BE4ecca6B8fDBdCa9`
+- Zircuit Testnet: `0xD4C0E0Fe064ea31FB639db0BE4ecca6B8fDBdCa9`
